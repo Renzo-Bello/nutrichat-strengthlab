@@ -14,7 +14,7 @@ Abre https://renzo-bello.github.io/nutrichat-strengthlab/.
 
 1. Abre la pestaña **Menú**.
 2. Elige una meta de 1.800 a 2.400 kcal, en tramos de 100.
-3. Revisa cuatro propuestas: menú casero, con legumbres, con atún o con carne de soya. Cada una muestra fotos ilustrativas, desayuno, almuerzo, colación, cena, ingredientes, porciones y macros.
+3. Revisa cuatro propuestas: menú casero, con legumbres, con atún o con carne de soya. Cada una muestra fotos ilustrativas y cuatro bloques en este orden: desayuno, almuerzo, cena y post entreno. Incluye ingredientes, porciones y macros.
 4. Pulsa **Usar como meta de hoy** para guardar ese objetivo en la fecha seleccionada.
 
 Entre las comidas aparece una pausa para tomar un vaso de agua de 250 ml (0 kcal). Las porciones se ajustan proporcionalmente a la meta. Los valores son referencias genéricas y aproximadas, calculadas con la regla 4/4/9; pueden variar según marca, preparación y peso real. Son menús iniciales, no una prescripción individual. Las fotos, recetas pesadas y etiquetas de cada asesorado permitirán sustituir estas referencias por platos personalizados.
