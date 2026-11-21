@@ -2,12 +2,25 @@
 
 Abre https://renzo-bello.github.io/nutrichat-strengthlab/.
 
+## Registrar alimentos
+
 1. Escribe `Mi meta es 2300 kcal`.
 2. Escribe `Me comeré 200 g de pan marraqueta`.
-3. Confirma con **Registrar 200 g**. La referencia Cugat aporta 540 kcal, 17 g de proteínas, 110 g de carbohidratos y 3 g de grasa. Quedan 1760 kcal.
+3. Confirma con **Registrar 200 g**. Consultar no modifica el diario.
 4. Recarga para comprobar que el registro persiste.
-5. Usa × para eliminar una entrada y comprueba el balance.
+5. Usa × para eliminar una entrada y **Deshacer** para restaurarla.
 
-Esta versión usa IndexedDB en cada navegador. No envía el diario a GitHub y no sincroniza dispositivos. El catálogo incluye referencias aproximadas y alimentos personalizados a partir de etiquetas por 100 g. No reconoce automáticamente todos los alimentos ni utiliza un modelo de IA: interpreta cantidades y busca coincidencias en el catálogo. Las opciones crudas y cocidas se distinguen.
+## Elegir un menú por calorías
 
-La base del servidor preparada para otra plataforma no forma parte de esta publicación estática de GitHub Pages.
+1. Abre la pestaña **Menú**.
+2. Elige una meta de 1.800 a 2.400 kcal, en tramos de 100.
+3. Revisa las tres propuestas: menú casero, con legumbres o con pescado. Cada una muestra desayuno, almuerzo, colación, cena, ingredientes, porciones y macros.
+4. Pulsa **Usar como meta de hoy** para guardar ese objetivo en la fecha seleccionada.
+
+Las porciones se ajustan proporcionalmente a la meta. Los valores son referencias genéricas y aproximadas, calculadas con la regla 4/4/9; pueden variar según marca, preparación y peso real. Son menús iniciales, no una prescripción individual. Las fotos, recetas pesadas y etiquetas de cada asesorado permitirán sustituir estas referencias por platos personalizados.
+
+## Alimentos y datos
+
+El catálogo incluye alimentos de referencia y permite añadir productos propios con la etiqueta por 100 g. Usa valores por 100 g, no por porción, y distingue entre alimentos crudos y cocidos. El cálculo de kcal es P × 4 + C × 4 + G × 9.
+
+Los datos se guardan en IndexedDB en cada navegador. No se suben a GitHub, no se sincronizan entre dispositivos y aún no hay cuentas para asesorados. Puedes descargar un respaldo JSON desde **Alimentos** y restaurarlo en otro navegador. Al restaurar, se combinan registros y alimentos; las metas del respaldo reemplazan las existentes en las mismas fechas.
