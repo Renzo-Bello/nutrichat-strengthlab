@@ -19,6 +19,19 @@ Abre https://renzo-bello.github.io/nutrichat-strengthlab/.
 
 Entre las comidas aparece una pausa para tomar un vaso de agua de 250 ml (0 kcal). Las porciones se ajustan proporcionalmente a la meta. Los valores son referencias genéricas y aproximadas, calculadas con la regla 4/4/9; pueden variar según marca, preparación y peso real. Son menús iniciales, no una prescripción individual. Las fotos, recetas pesadas y etiquetas de cada asesorado permitirán sustituir estas referencias por platos personalizados.
 
+
+## Hidratación y micronutrientes
+
+En el diario puedes registrar agua con los botones de 250 o 500 ml, deshacer 250 ml y consultar el total del día. En **Metas**, configura la cantidad personal de agua y los objetivos de calcio, hierro, magnesio, potasio, sodio y vitaminas C y D para la fecha seleccionada. Las metas no se calculan automáticamente.
+
+Los micronutrientes se suman desde los alimentos guardados con datos de etiqueta. La app muestra cuántos registros tienen esos datos y deja claro cuando el total es parcial; los alimentos sin información no se cuentan como cero.
+
+## Leer una etiqueta
+
+Abre la sección **Etiqueta**. Puedes tomar una foto o elegir una imagen como referencia y transcribir los datos por porción o por 100 g. La foto se queda en el navegador y no se procesa con OCR. NutriChat convierte los valores a 100 g, recalcula las kcal con P × 4 + C × 4 + G × 9 y guarda el alimento junto a los micronutrientes informados. Al registrar ese alimento, sus micros se suman al seguimiento diario.
+
+En el chat también puedes pedir «resumen», «micronutrientes», «agua 500 ml» o «un vaso de agua» (250 ml), o usar los botones rápidos para abrir la etiqueta y configurar metas.
+
 ## Alimentos y datos
 
 El catálogo incluye alimentos de referencia y permite añadir productos propios con la etiqueta por 100 g. Usa valores por 100 g, no por porción, y distingue entre alimentos crudos y cocidos. El cálculo de kcal es P × 4 + C × 4 + G × 9.
