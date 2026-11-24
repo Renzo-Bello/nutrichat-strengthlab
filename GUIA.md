@@ -51,3 +51,11 @@ Desde **Más**, pulsa **Cómo instalar** o **Instalar NutriChat**, según tu nav
 El catálogo incluye alimentos de referencia y permite añadir productos propios con la etiqueta por 100 g. Usa valores por 100 g, no por porción, y distingue entre alimentos crudos y cocidos. El cálculo de kcal es P × 4 + C × 4 + G × 9.
 
 Los datos se guardan en IndexedDB en cada navegador. No se suben a GitHub, no se sincronizan entre dispositivos y aún no hay cuentas para asesorados. Puedes descargar un respaldo JSON desde **Más** y restaurarlo en otro navegador. Al restaurar, se combinan registros y alimentos; las metas del respaldo reemplazan las existentes en las mismas fechas.
+
+## Contactar por WhatsApp
+
+Usa **WhatsApp** en la cabecera o **Más → Escribir por WhatsApp** para abrir una conversación con Renzo al +56 9 5752 8873. Tú escribes y envías el mensaje desde WhatsApp.
+
+## Escribir en iPhone
+
+En **Registrar**, toca el campo e ingresa cantidad y alimento. Las sugerencias se muestran sobre el campo; al elegir una se conserva la cantidad. Al enviar la consulta, el teclado se cierra para que puedas revisar el resultado y confirmar con **Registrar**.

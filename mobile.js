@@ -15,6 +15,10 @@ const registerNav=document.createElement('button');registerNav.id='regnav';regis
 const navItems={diary:['chatnav','diary','Hoy'],register:['regnav','plus','Registrar'],menu:['menunav','food','Recetas'],label:['labelnav','guide','Aprender'],db:['dbnav','help','Más']};
 for(const [view,[id,glyph,label]] of Object.entries(navItems)){$(id).innerHTML=icon(glyph)+'<span>'+label+'</span>';$(id).onclick=()=>navigate(view);}
 const helpActions=document.createElement('div');helpActions.className='app-header-actions';helpActions.innerHTML='<button type="button" id="appHelp" aria-label="Ayuda">'+icon('help')+'</button>';document.querySelector('.sidebar').append(helpActions);$('appHelp').onclick=()=>$('helpdialog').showModal();
+const whatsappURL='https://wa.me/56957528873';
+const whatsappIcon='<svg class="nc-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.7A8.5 8.5 0 1 1 20.5 11.5Z"/><path d="M8 7.5c0 4.5 4 8 7.5 8l1-2-2.5-1-1 1c-1.5-.6-2.5-1.6-3-3l1-1-1-2.5Z"/></svg>';
+const whatsapp=document.createElement('a');whatsapp.href=whatsappURL;whatsapp.target='_blank';whatsapp.rel='noopener noreferrer';whatsapp.className='whatsapp-link';whatsapp.setAttribute('aria-label','Contactar a Renzo por WhatsApp');whatsapp.innerHTML=whatsappIcon+'<span>WhatsApp</span>';helpActions.prepend(whatsapp);
+const contact=document.createElement('section');contact.className='contact-card';contact.innerHTML='<div><h2>¿Necesitas ayuda con tu alimentación?</h2><p>Conversa con Renzo por WhatsApp.</p></div><a class="whatsapp-contact" href="'+whatsappURL+'" target="_blank" rel="noopener noreferrer">'+whatsappIcon+' Escribir por WhatsApp</a><p class="small">+56 9 5752 8873</p>';$('database').prepend(contact);
 const micro=document.querySelector('.micro-section');const microDetails=document.createElement('details');microDetails.className='micro-details';microDetails.innerHTML='<summary>Ver micronutrientes</summary>';micro.before(microDetails);microDetails.append(micro);
 const note=document.querySelector('.summarycol .note');const dataDetails=document.createElement('details');dataDetails.innerHTML='<summary>Cómo se guardan y calculan tus datos</summary>';note.before(dataDetails);dataDetails.append(note);
 const cta=document.createElement('div');cta.className='view-cta';cta.innerHTML='<div><strong>Tu próximo registro</strong><p>Agrega lo que comiste a tu día.</p></div><button type="button">'+icon('plus')+' Registrar</button>';document.querySelector('#diary .layout').before(cta);cta.querySelector('button').onclick=()=>navigate('register');
@@ -25,7 +29,8 @@ let currentView='';const scrollPositions={};
 function navigate(view,historyMode='push'){
  if(!navItems[view])view='diary';
  if(currentView)scrollPositions[currentView]=window.scrollY;
- currentView=view;document.body.dataset.view=view;
+ if(view!=='register'&&document.activeElement===$('message'))$('message').blur();
+ currentView=view;document.body.dataset.view=view;document.documentElement.classList.toggle('register-screen',view==='register');scheduleViewport();
  for(const [key,id] of Object.entries({db:'database',menu:'menus',label:'labelreader'}))$(id).classList.toggle('hidden',view!==key);
  $('diary').classList.toggle('hidden',!['diary','register'].includes(view));
  chatPanel.classList.toggle('hidden',view!=='register');summaryCol.classList.toggle('hidden',view!=='diary');journal.classList.toggle('hidden',view!=='diary');guide.classList.toggle('hidden',view!=='diary');cta.classList.toggle('hidden',view!=='diary');
@@ -37,7 +42,35 @@ function navigate(view,historyMode='push'){
  window.scrollTo({top:scrollPositions[view]||0,behavior:'instant'});
  if(historyMode!=='replace')mainTitle.focus({preventScroll:true});
 }
-const sizeViewport=()=>{const v=window.visualViewport;document.body.classList.toggle('compact-screen',(v?.height||innerHeight)<600);document.documentElement.style.setProperty('--visible-height',(v?.height||innerHeight)+'px');document.documentElement.style.setProperty('--keyboard-inset',Math.max(0,innerHeight-(v?.height||innerHeight)-(v?.offsetTop||0))+'px');};window.visualViewport?.addEventListener('resize',sizeViewport);window.visualViewport?.addEventListener('scroll',sizeViewport);sizeViewport();
+// Safari can shrink AND pan its visual viewport when opening the keyboard.
+// Anchor one shell to that rectangle; never move the navigation independently.
+let viewportFrame=0;
+let restingHeight=window.visualViewport?.height||innerHeight;
+function sizeViewport(){
+ viewportFrame=0;
+ const v=window.visualViewport;
+ if(v&&Math.abs(v.scale-1)>0.05)return; // Preserve browser pinch-to-zoom.
+ const height=Math.round(v?.height||innerHeight),top=Math.round(v?.offsetTop||0);
+ const focused=document.activeElement===$('message');
+ if(!focused)restingHeight=height;
+ const keyboard=focused&&restingHeight-height>100;
+ document.body.classList.toggle('keyboard-open',keyboard);
+ document.body.classList.toggle('compact-screen',height<600);
+ const style=document.documentElement.style;
+ for(const [key,value] of [['--visible-height',height+'px'],['--visible-top',top+'px']])if(style.getPropertyValue(key)!==value)style.setProperty(key,value);
+}
+function scheduleViewport(){if(!viewportFrame)viewportFrame=requestAnimationFrame(sizeViewport);}
+window.visualViewport?.addEventListener('resize',scheduleViewport);
+window.visualViewport?.addEventListener('scroll',scheduleViewport);
+window.addEventListener('resize',scheduleViewport);
+window.addEventListener('orientationchange',()=>{restingHeight=0;scheduleViewport();});
+$('message').addEventListener('focus',()=>{restingHeight=Math.max(restingHeight,window.visualViewport?.height||innerHeight);scheduleViewport();});
+$('message').addEventListener('blur',scheduleViewport);
+// Keep focus during a suggestion/send tap so Safari does not close and reopen its keyboard.
+$('chatform').addEventListener('pointerdown',e=>{if(document.activeElement===$('message')&&e.target.closest('button'))e.preventDefault();});
+$('message').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.isComposing){e.preventDefault();e.stopImmediatePropagation();}});
+$('chatform').addEventListener('submit',()=>{if(matchMedia('(max-width:850px)').matches&&loaded&&!busy&&$('message').value.trim())$('message').blur();},true);
+sizeViewport();
 window.navigateApp=navigate;window.addEventListener('popstate',()=>navigate(location.hash.slice(1),'none'));
 // The original app still opens the label screen from chat and quick actions.
 navigate(location.hash.slice(1)||'diary','replace');
