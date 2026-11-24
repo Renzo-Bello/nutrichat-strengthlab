@@ -102,6 +102,28 @@ try{
  await evaluate(`document.querySelector('[data-day="2027-01-04"]').click()`);await until(`loaded&&$('day').value==='2027-01-04'`);check(true,'tapping a weekday selects its records');
  await evaluate(`$('dashboardDate').value=${JSON.stringify(originalDay)};$('dashboardDate').dispatchEvent(new Event('change'))`);await until(`loaded&&state.entries.length===1`);
  check(await evaluate(`state.waterMl===500&&$('dailyWater').textContent==='500'&&state.macroGoal.protein===120`),'returning to the day restores cards and saved targets');
+ for(const [metric,title] of [['calories','Calorías'],['protein','Proteínas'],['carbs','Carbohidratos'],['fat','Grasas']]){
+  await click('[data-metric="'+metric+'"]');
+  check(await evaluate(`$('metricDialog').open&&$('metricTitle').textContent===${JSON.stringify(title)}&&$('metricExplanation').textContent.split(' ').length<40`),`${title} card opens its brief explanation`);
+  await click('#closeMetric');
+ }
+ await evaluate(`document.querySelector('[data-metric="protein"]').focus()`);
+ await cdp('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,text:'\r',unmodifiedText:'\r'});await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+ check(await evaluate(`$('metricDialog').open&&$('metricTitle').textContent==='Proteínas'`),'metric cards support keyboard activation');
+ await click('#metricSetGoal');
+ check(await evaluate(`!$('metricDialog').open&&$('goaldialog').open&&document.activeElement.id==='goalprotein'`),'explanation opens the matching goal field');
+ await evaluate(`$('goalinput').value='2300';$('goalprotein').value='130';$('goalcarbs').value='250';$('goalfat').value='70';$('goalfat').dispatchEvent(new Event('input'))`);
+ check(await evaluate(`$('goalinput').value==='2300'&&!$('goalinput').readOnly&&$('goalMacroEstimate').textContent.length>0`),'editing macros does not overwrite the calorie goal');
+ await evaluate(`$('goalform').requestSubmit()`);await until(`!busy&&!$('goaldialog').open`);
+ check(await evaluate(`state.goal===2300&&state.macroGoal.protein===130&&state.macroGoal.carbs===250&&state.macroGoal.fat===70&&$('goal-protein').textContent==='/ 130 g'`),'independent calorie and macro goals save and appear in the cards');
+ await cdp('Page.reload');await until(`typeof loaded!=='undefined'&&loaded&&!!window.renderDailyOverview`);
+ check(await evaluate(`state.goal===2300&&state.macroGoal.protein===130&&state.macroGoal.fat===70`),'calorie and macro goals survive reload');
+ await click('#configureDailyGoals');check(await evaluate(`$('goaldialog').open`),'visible goal action opens the settings');
+ await evaluate(`$('goalinput').value='2100';for(const key of ['protein','carbs','fat'])$('goal'+key).value='';$('goalfat').dispatchEvent(new Event('input'));$('goalform').requestSubmit()`);await until(`!busy&&!$('goaldialog').open`);
+ check(await evaluate(`state.goal===2100&&state.macroGoal===null&&$('goal-protein').textContent.includes('sin meta')`),'calorie-only tracking removes optional macro targets');
+ await click('#configureDailyGoals');await evaluate(`$('goalprotein').value='140';$('goalprotein').dispatchEvent(new Event('input'));$('goalform').requestSubmit()`);await until(`!busy`);
+ check(await evaluate(`$('goaldialog').open&&$('goalerror').textContent.includes('Completa')&&state.goal===2100&&state.macroGoal===null`),'incomplete macro targets show an error without changing saved goals');
+ await click('[data-close="goaldialog"]');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
 }finally{

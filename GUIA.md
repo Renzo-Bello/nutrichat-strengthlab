@@ -65,3 +65,9 @@ En **Registrar**, toca el campo e ingresa cantidad y alimento. Las sugerencias s
 En **Hoy**, elige una fecha desde la semana o el selector del mes. La tarjeta grande muestra calorías registradas frente a tu meta; las tres tarjetas pequeñas muestran proteínas, carbohidratos y grasas. Si no configuraste una meta, se indica “sin meta”. Usa **Metas** para cambiar tus objetivos de la fecha seleccionada.
 
 Toca **Registrar agua** para abrir los controles de 250 y 500 ml y configurar la meta de hidratación. Las comidas aparecen debajo; **Más detalles de mi día** contiene micronutrientes y las explicaciones del almacenamiento. El registro de alimentos conserva el ajuste de teclado para iPhone.
+
+## Entender las tarjetas y definir objetivos
+
+Toca **Calorías**, **Proteínas**, **Carbos** o **Grasas** para leer qué significa en dos frases. Desde esa explicación, toca **Configurar mi meta** o **Editar mi meta**. También puedes usar **Configurar metas de calorías y macros** en el resumen.
+
+Ingresa tus calorías y, opcionalmente, los tres macros en gramos. Puedes seguir solo calorías dejando los macros vacíos. La app conserva las calorías que escribas aunque la equivalencia aproximada de los macros sea distinta. Al guardar, las tarjetas muestran lo registrado frente a tus objetivos de la fecha seleccionada.
