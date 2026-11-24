@@ -38,7 +38,7 @@ No se requiere subir una foto ni escribir nutrientes para aprender. Al final est
 
 ## Recetas
 
-Abre **Recetas**. Hay 24 preparaciones adicionales con ingredientes, cantidades, tiempo activo y pasos. Busca por nombre o ingrediente, filtra por momento del día y guarda favoritas con el corazón. Dentro de cada receta, elige 1, 2 o 4 porciones: cambian las cantidades de ingredientes; los valores nutricionales siguen indicando una porción.
+Abre **Recetas**. Hay 24 preparaciones adicionales con foto ilustrativa, ingredientes, cantidades, tiempo activo y pasos. Toca la foto o el botón para abrir la receta. Las imágenes se generaron con IA y no representan una cantidad exacta: usa los gramos indicados. Busca por nombre o ingrediente, filtra por momento del día y guarda favoritas con el corazón. Dentro de cada receta, elige 1, 2 o 4 porciones: cambian las cantidades de ingredientes; los valores nutricionales siguen indicando una porción.
 
 Los pesos indican si el ingrediente está crudo, cocido o escurrido. Las preparaciones con ingredientes ya cocidos no incluyen ese tiempo previo. Consultar una receta no registra comida automáticamente. El botón final lleva al registro de alimentos. Los menús diarios originales siguen disponibles al final de Recetas, en **Ver los menús diarios por calorías**.
 

@@ -17,6 +17,7 @@ const click=selector=>evaluate(`document.querySelector(${JSON.stringify(selector
 let passed=0;const check=(value,message)=>{assert(value,message);console.log('PASS '+message);passed++;};
 try{
  await cdp('Runtime.enable');await cdp('Page.enable');await cdp('Network.enable');
+ await cdp('Page.navigate',{url:'about:blank'});await wait(100);errors.length=0;
  await cdp('Storage.clearDataForOrigin',{origin:new URL(appURL).origin,storageTypes:'all'});
  await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  await cdp('Page.navigate',{url:appURL});await until(`typeof loaded!=='undefined'&&loaded&&!!window.navigateApp`);
@@ -32,6 +33,8 @@ try{
  }
  await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  await click('#menunav');check(await evaluate(`document.querySelectorAll('.recipe-card').length===24`),'24 new recipes render');
+ await evaluate(`Promise.all([...document.querySelectorAll('.recipe-photo')].map(img=>{img.loading='eager';return img.decode();}))`);
+ check(await evaluate(`document.querySelectorAll('.recipe-photo').length===24&&[...document.querySelectorAll('.recipe-photo')].every(img=>img.naturalWidth>0)`),'24 recipe photos load');
  check(await evaluate(`recipeBook.every(r=>r.steps.length>=2&&r.items.every(([id,g])=>base.some(f=>f.id===id)&&g>0))`),'all recipe ingredients resolve to existing nutrition data');
  await evaluate(`$('recipeSearch').value='garbanzos';$('recipeSearch').dispatchEvent(new Event('input'))`);
  check(await evaluate(`document.querySelectorAll('.recipe-card').length===3`),'ingredient search returns matching recipes');
@@ -39,6 +42,8 @@ try{
  await click('[data-favorite="avena-fruta"]');await click('[data-recipe-filter="Favoritas"]');
  check(await evaluate(`document.querySelectorAll('.recipe-card').length===1`),'favorite filter works');
  await click('[data-recipe="avena-fruta"]');
+ await evaluate(`document.querySelector('.recipe-detail-photo img').decode()`);
+ check(await evaluate(`document.querySelector('.recipe-detail-photo img').naturalWidth>0`),'recipe detail photo loads');
  const one=await evaluate(`document.querySelector('#recipeIngredients li strong').textContent`);await evaluate(`$('recipeServings').value='2';$('recipeServings').dispatchEvent(new Event('change'))`);
  check(one==='40 g'&&await evaluate(`document.querySelector('#recipeIngredients li strong').textContent==='80 g'`),'doubling servings doubles ingredient quantities');
  await click('#closeRecipe');await click('#labelnav');
@@ -63,6 +68,8 @@ try{
  await cdp('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await cdp('Page.reload');await until(`typeof loaded!=='undefined'&&loaded&&!!window.navigateApp`);
  check(await evaluate(`state.entries.length===1&&document.querySelectorAll('.recipe-card').length===24`),'offline reload restores app, data and recipes');
+ await evaluate(`Promise.all(recipeBook.map(r=>fetch('assets/recipes/'+r.id+'.jpg').then(response=>{if(!response.ok)throw Error('Offline photo missing');return response.blob();})))`);
+ check(true,'all 24 recipe photos available offline');
  await click('#chatnav');await click('#waterAdd250');await until(`!busy&&state.waterMl===500`);check(true,'offline hydration write works');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
