@@ -32,6 +32,22 @@ try{
   }
  }
  await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+ // Model Safari's independent visual viewport while the layout viewport stays full-height.
+ check(await evaluate(`[...document.querySelectorAll('a[href="https://wa.me/56957528873"]')].length===2`),'WhatsApp contact links use the requested number');
+ await click('#regnav');await wait(100);await evaluate(`$('message').focus({preventScroll:true});window.__testHeight=844;window.__testTop=0;Object.defineProperty(visualViewport,'height',{configurable:true,get:()=>window.__testHeight});Object.defineProperty(visualViewport,'offsetTop',{configurable:true,get:()=>window.__testTop});`);
+ for(const [height,top] of [[500,0],[390,80],[320,120]]){
+  await evaluate(`window.__testHeight=${height};window.__testTop=${top};visualViewport.dispatchEvent(new Event('resize'));visualViewport.dispatchEvent(new Event('scroll'));`);await wait(80);
+  check(await evaluate(`(()=>{const input=$('message').getBoundingClientRect(),send=$('send').getBoundingClientRect(),nav=document.querySelector('.nav').getBoundingClientRect();return input.top>=${top}&&input.bottom<=nav.top&&send.bottom<=${top+height}&&nav.bottom<=${top+height+1};})()`),`input and navigation stay in Safari viewport ${height}px with offset ${top}px`);
+ }
+ const beforeTyping=await evaluate(`$('message').getBoundingClientRect().bottom`);
+ await cdp('Input.insertText',{text:'150 g de pollo'});await wait(80);
+ check(await evaluate(`Math.abs($('message').getBoundingClientRect().bottom-${beforeTyping})<1&&$('suggestions').children.length>0`),'suggestions do not move the typing field');
+ const suggestion=await evaluate(`(()=>{const r=$('suggestions').querySelector('button').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+ await cdp('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[suggestion]});await cdp('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await wait(80);
+ check(await evaluate(`document.activeElement===$('message')&&$('message').value.startsWith('150 g de ')&&$('suggestions').children.length===0`),'tapping a suggestion preserves focus and quantity');
+ await evaluate(`$('message').value='';$('message').blur();delete visualViewport.height;delete visualViewport.offsetTop;visualViewport.dispatchEvent(new Event('resize'));`);await wait(100);
+ check(await evaluate(`!document.body.classList.contains('keyboard-open')`),'layout recovers when the keyboard closes');
+ await click('#chatnav');check(await evaluate(`!document.documentElement.classList.contains('register-screen')&&getComputedStyle(document.documentElement).overflow!=='hidden'`),'leaving registration restores page scrolling');
  await click('#menunav');check(await evaluate(`document.querySelectorAll('.recipe-card').length===24`),'24 new recipes render');
  await evaluate(`Promise.all([...document.querySelectorAll('.recipe-photo')].map(img=>{img.loading='eager';return img.decode();}))`);
  check(await evaluate(`document.querySelectorAll('.recipe-photo').length===24&&[...document.querySelectorAll('.recipe-photo')].every(img=>img.naturalWidth>0)`),'24 recipe photos load');

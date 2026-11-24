@@ -25,7 +25,7 @@ body{font-size:16px}button,input,select,textarea{font:inherit}button,a,summary{-
  body[data-view=register] .suggest{flex:none;padding:8px 12px}
  body[data-view=register] .composer{position:static;flex:none;padding:10px}
  body[data-view=register] .composer .small{margin-top:6px!important;line-height:1.4}
- body[data-view=register] .sidebar .nav{bottom:var(--keyboard-inset,0px)}
+ body[data-view=register] .sidebar .nav{position:absolute;bottom:0}
  body[data-view=register] .suggestions{max-height:90px}
  .recipe-filters{scrollbar-width:none}.recipe-filters::-webkit-scrollbar{display:none}
 }
@@ -36,3 +36,24 @@ body{font-size:16px}button,input,select,textarea{font:inherit}button,a,summary{-
 /* Recipe photography: reserved aspect ratio avoids shifts while images load. */
 .recipe-card{overflow:hidden;padding:0 20px 20px}.recipe-top{position:relative;width:calc(100% + 40px);margin:0 -20px;display:block}.recipe-image-button{display:block;width:100%;padding:0;border:0;border-radius:0;overflow:hidden;background:#edf2eb;min-height:0}.recipe-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}.recipe-top .favorite{position:absolute;top:12px;right:12px;min-width:44px;min-height:44px;background:#fff;color:#234436;border:1px solid #ffffffaa;border-radius:50%;box-shadow:0 2px 12px #153f3520}.recipe-top .favorite[aria-pressed=true]{color:#a34a16;background:#fff8ee}.recipe-image-button:focus-visible{outline-offset:-4px}.recipe-detail-photo{margin:20px 0 14px}.recipe-detail-photo img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:16px;background:#edf2eb}.recipe-detail-photo figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:8px}.recipe-dialog .dialog-top{position:sticky;top:-22px;background:white;padding:12px 0;z-index:2}.recipe-dialog .dialog-top button{background:white}
 @media(max-width:850px){.recipe-card{padding:0 18px 18px}.recipe-top{width:calc(100% + 36px);margin:0 -18px}.recipe-dialog .dialog-top h2{font-size:22px}.recipe-dialog .dialog-top{top:-22px}.recipe-detail-photo{margin-top:10px}}
+
+/* Contact links stay out of the typing area. */
+.whatsapp-link,.whatsapp-contact{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 13px;border-radius:12px;text-decoration:none;font-size:14px;font-weight:650;background:#d8edb9;color:#143d32;white-space:nowrap}.contact-card{padding:20px;border:1px solid #cde0d0;background:#f0f7eb;border-radius:16px;margin-bottom:20px}.contact-card h2{font-size:20px}.contact-card p{margin:10px 0}.contact-card .nc-icon{width:22px;height:22px}.whatsapp-contact{background:#176d51;color:white}.app-header-actions{flex-wrap:wrap}
+@media(max-width:850px){
+ html.register-screen,html.register-screen body{overflow:hidden;overscroll-behavior:none;height:100%}
+ body[data-view=register] .app{position:fixed;top:var(--visible-top,0px);left:0;right:0;width:100%;height:var(--visible-height,100dvh)}
+ body[data-view=register] .sidebar{position:static}
+ body[data-view=register] .sidebar .nav{position:absolute;bottom:0}
+ body[data-view=register] .chat{overscroll-behavior:contain;scroll-behavior:auto;-webkit-overflow-scrolling:touch;overflow-anchor:none}
+ body[data-view=register] .composer{position:relative;bottom:auto;z-index:12}
+ body[data-view=register] .suggestions{position:absolute;bottom:calc(100% + 4px);left:10px;right:10px;margin:0;padding:6px;max-height:144px;overflow:auto;display:flex;flex-direction:column;gap:4px;background:white;border:1px solid var(--line);border-radius:12px;box-shadow:0 -6px 22px #153f3518;overscroll-behavior:contain}
+ body[data-view=register] .suggestions:empty{display:none}
+ body[data-view=register] .suggestions button{flex:none;white-space:normal;min-height:44px;text-align:left}
+ body[data-view=register] .inputwrap input{font-size:16px;line-height:1.5;scroll-margin:0}
+ body[data-view=register].keyboard-open header,body[data-view=register].keyboard-open .chathead,body[data-view=register].keyboard-open .suggest,body[data-view=register].keyboard-open .composer>.small{display:none}
+ body[data-view=register].keyboard-open .sidebar>div:first-child,body[data-view=register].keyboard-open .app-header-actions{display:none}
+ body[data-view=register].keyboard-open .sidebar{padding:0;height:0;min-height:0}
+ body[data-view=register].keyboard-open main{padding-top:8px}
+ .sidebar .app-header-actions{flex-wrap:nowrap;gap:6px}.whatsapp-link{padding:10px;font-size:13px;gap:5px}.sidebar .brand{font-size:20px}
+}
+@media(max-width:360px){.sidebar{padding-left:12px;padding-right:12px;gap:6px}.whatsapp-link span{display:none}.whatsapp-link{min-width:44px}}

@@ -224,7 +224,7 @@ $('openNutrientGoals').onclick=openNutrientGoals;$('editMicroGoals').onclick=ope
 $('waterAdd250').onclick=()=>registerWater(250);$('waterAdd500').onclick=()=>registerWater(500);$('waterUndo250').onclick=()=>registerWater(-250);
 $('quickWater').onclick=()=>registerWater(250);$('quickLabel').onclick=()=>tab('label');$('quickGoals').onclick=openNutrientGoals;
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-document.querySelectorAll('[data-example]').forEach(b=>b.onclick=()=>{$('message').value=b.dataset.example;$('message').focus()});
+document.querySelectorAll('[data-example]').forEach(b=>b.onclick=()=>{$('message').value=b.dataset.example;$('message').focus({preventScroll:true})});
 $('nutrientGoalForm').onsubmit=async e=>{e.preventDefault();if(busy)return;const microGoals={};for(const d of microDefs){const value=$('micro-goal-'+d.key).value.trim();if(value!=='')microGoals[d.key]=Number(value);}setBusy(true);try{await api('dailyTargets',{waterGoal:$('waterGoalInput').value.trim(),microGoals});$('nutrientGoalDialog').close();await load();toast('Metas diarias guardadas para esta fecha.');}catch(e){$('nutrientGoalError').textContent=e.message;}finally{setBusy(false);}};
 $('labelBasis').onchange=()=>{const perPortion=$('labelBasis').value==='portion';$('labelServing').disabled=!perPortion;$('labelServing').required=perPortion;updateLabelPreview();};
 $('labelForm').addEventListener('input',()=>{$('labelSaved').textContent='';updateLabelPreview();});
@@ -258,7 +258,7 @@ async function advanceGuide(){
  setBusy(true);$('guidenext').disabled=true;$('day').disabled=true;
  try{await api('goal',{kcal:Number(input.value)});await load();if(!loaded)throw Error('Meta guardada, pero no pudimos actualizar el balance. Cierra la guía y recarga.');guideStep=1;paintStep();}
  catch(e){$('onboarderror').textContent=e.message}finally{setBusy(false);$('guidenext').disabled=false;$('day').disabled=false;}
- }else if(guideStep===1){guideStep=2;paintStep();}else{finishGuide();tab(false);$('message').value='200 g de pan marraqueta';$('message').focus();}
+ }else if(guideStep===1){guideStep=2;paintStep();}else{finishGuide();tab(false);$('message').value='200 g de pan marraqueta';$('message').focus({preventScroll:true});}
 }
 function initGuide(){if(loaded&&!guideSeen()&&state.goal===null&&!state.entries.length)showGuide();}
 $('guidenext').onclick=advanceGuide;$('guideback').onclick=()=>{if(!busy){guideStep--;paintStep()}};
@@ -269,7 +269,7 @@ $('openguide').onclick=()=>{if(!busy)showGuide()};$('helpnav').onclick=()=>$('he
 
 function moveDay(delta){if(busy)return;const date=new Date($('day').value+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+delta);$('day').value=date.toISOString().slice(0,10);$('day').onchange();}
 $('prevday').onclick=()=>moveDay(-1);$('nextday').onclick=()=>moveDay(1);$('today').onclick=()=>{if(busy)return;$('day').value=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santiago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());$('day').onchange();};
-$('message').addEventListener('input',()=>{const r=parse($('message').value,state.foods);const list=r.type==='food'?r.matches.slice(0,5):[];$('suggestions').replaceChildren();for(const f of list){const b=document.createElement('button');b.type='button';b.textContent=f.name;b.onclick=()=>{$('message').value=(r.units?r.units+' ':r.grams+(r.volume?' ml de ':' g de '))+f.name;$('suggestions').replaceChildren();$('message').focus();};$('suggestions').append(b);}});
+$('message').addEventListener('input',()=>{const r=parse($('message').value,state.foods);const list=r.type==='food'?r.matches.slice(0,5):[];$('suggestions').replaceChildren();for(const f of list){const b=document.createElement('button');b.type='button';b.textContent=f.name;b.onclick=()=>{$('message').value=(r.units?r.units+' ':r.grams+(r.volume?' ml de ':' g de '))+f.name;$('suggestions').replaceChildren();$('message').focus({preventScroll:true});};$('suggestions').append(b);}});
 $('importdata').onclick=()=>{if(!busy)$('importfile').click()};$('importfile').onchange=async e=>{const file=e.target.files?.[0];e.target.value='';if(!file||busy)return;try{const backup=JSON.parse(await file.text());if(backup.app!=='NutriChat'||backup.version!==1||!backup.data)throw Error('Elige un respaldo JSON de NutriChat válido.');const ok=confirm('Se combinarán los alimentos y registros del respaldo con este diario. Las metas del respaldo reemplazarán las metas existentes para las mismas fechas. ¿Continuar?');if(!ok)return;setBusy(true);await api('import',{data:backup.data});await load();toast('Respaldo restaurado en este navegador.');}catch(e){notice(e.message||'No se pudo leer el archivo.')}finally{setBusy(false)}};$('exportdata').onclick=async()=>{if(busy)return;setBusy(true);try{const data=await api('export');const blob=new Blob([JSON.stringify({app:'NutriChat',version:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='nutrichat-respaldo-'+$('day').value+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Respaldo preparado para descargar.');}catch(e){notice(e.message)}finally{setBusy(false);}};
 
 const photoDialog=$('photodialog');
