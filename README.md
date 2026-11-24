@@ -40,10 +40,14 @@ Al cambiar archivos publicados, incrementar la versión `CACHE` de `sw.js`. La n
 node tests/browser-smoke.mjs http://127.0.0.1:8765/ http://127.0.0.1:9222
 ```
 
-El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 79 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
+El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 91 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
 
 Validado con Chromium emulando tamaños móviles. La instalación y el teclado de Safari/iOS necesitan comprobación en un teléfono real; la emulación no los reproduce completamente.
 
 ## Contacto y registro en iPhone
 
 El enlace de WhatsApp de la cabecera y de Más abre `https://wa.me/56957528873`; no envía mensajes automáticamente. En móvil, el registro usa un único contenedor fijo que sigue la altura y el desplazamiento de `visualViewport`. Las sugerencias aparecen sobre el campo sin modificar su posición y sus botones conservan el foco durante el toque. Al enviar una consulta se cierra el teclado para revisar el resultado. Se probaron reducciones y desplazamientos de viewport simulados, no un teclado físico de Safari/iOS.
+
+## Explicaciones y metas
+
+Las tarjetas de calorías, proteínas, carbohidratos y grasas son botones accesibles que abren una explicación breve y permiten editar la meta correspondiente. El acceso Configurar/Editar metas de calorías y macros abre el formulario completo. Las calorías se guardan independientemente de los macros; la equivalencia 4/4/9 se muestra solo como referencia. Las metas son por fecha y persisten en IndexedDB.
