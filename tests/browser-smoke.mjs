@@ -21,7 +21,9 @@ try{
  await cdp('Storage.clearDataForOrigin',{origin:new URL(appURL).origin,storageTypes:'all'});
  await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  await cdp('Page.navigate',{url:appURL});await until(`typeof loaded!=='undefined'&&loaded&&!!window.navigateApp`);
+ check(await evaluate(`$('notice').textContent===''`),'daily overview renders without a storage or render error');
  check(await evaluate(`document.body.dataset.view==='diary'&&!document.querySelector('dialog[open]')`),'home starts without blocking onboarding');
+ check(await evaluate(`$('dailyCalorieGoal').textContent==='Sin meta'&&$('goal-protein').textContent.includes('sin meta')`),'overview does not invent calorie or macro goals');
  for(const width of [320,375,390,430,768,1280]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:width===320?568:844,deviceScaleFactor:1,mobile:width<850});
   await wait(150);
@@ -75,7 +77,7 @@ try{
  check(await evaluate(`state.entries[0].grams===200`),'entry editing persists new quantity');
  await click('[data-delete]');await until(`!busy&&state.entries.length===0`);await click('#undo');await until(`!busy&&state.entries.length===1`);
  check(await evaluate(`state.entries[0].grams===200`),'delete and undo preserve the record');
- await click('#waterAdd250');await until(`!busy&&state.waterMl===250`);check(true,'water entry saves');
+ await click('#registerWater');check(await evaluate(`$('waterDialog').open`),'water sheet opens from the compact card');await click('#waterAdd250');await until(`!busy&&state.waterMl===250`);check(await evaluate(`$('dailyWater').textContent==='250'`),'water card updates after recording water');await click('#closeWater');
  await click('#editgoal');await evaluate(`$('goalinput').value='2200';$('goalform').requestSubmit()`);await until(`!busy&&state.goal===2200`);check(true,'daily goal saves');
  await click('#nextday');await until(`loaded&&state.entries.length===0`);await click('#prevday');await until(`loaded&&state.entries.length===1`);check(await evaluate(`state.goal===2200&&state.waterMl===250`),'date navigation preserves per-day records');
  await cdp('Page.reload');await until(`typeof loaded!=='undefined'&&loaded&&!!window.navigateApp`);check(await evaluate(`state.entries.length===1&&state.entries[0].grams===200&&state.goal===2200&&state.waterMl===250`),'records, goal and water survive reload');
@@ -87,6 +89,19 @@ try{
  await evaluate(`Promise.all(recipeBook.map(r=>fetch('assets/recipes/'+r.id+'.jpg').then(response=>{if(!response.ok)throw Error('Offline photo missing');return response.blob();})))`);
  check(true,'all 24 recipe photos available offline');
  await click('#chatnav');await click('#waterAdd250');await until(`!busy&&state.waterMl===500`);check(true,'offline hydration write works');
+ await evaluate(`api('goal',{kcal:2140,macros:{protein:120,carbs:280,fat:60}}).then(load)`);
+ check(await evaluate(`$('dailyCalorieGoal').textContent.includes('2.140')||$('dailyCalorieGoal').textContent.includes('2140')`),'calorie card displays the saved daily goal');
+ check(await evaluate(`$('goal-protein').textContent==='/ 120 g'&&$('goal-carbs').textContent==='/ 280 g'&&$('goal-fat').textContent==='/ 60 g'`),'all three macro cards display saved targets');
+ check(await evaluate(`$('daily-protein').textContent===fmt(total().protein)&&parseFloat($('proteinRing').style.getPropertyValue('--progress'))>0`),'macro amounts and progress use actual entries');
+ await evaluate(`api('dailyTargets',{waterGoal:3000,microGoals:{}}).then(load)`);
+ check(await evaluate(`$('dailyWaterGoal').textContent.includes('3.000')||$('dailyWaterGoal').textContent.includes('3000')`),'water card displays the personal water goal');
+ const originalDay=await evaluate(`$('day').value`);
+ await evaluate(`$('dashboardDate').value='2026-12-31';$('dashboardDate').dispatchEvent(new Event('change'))`);await until(`loaded&&$('day').value==='2026-12-31'`);
+ check(await evaluate(`document.querySelectorAll('[data-day]').length===7&&document.querySelector('[data-day="2027-01-03"]')!==null&&document.querySelector('[data-day="2026-12-31"]').getAttribute('aria-pressed')==='true'`),'weekly calendar handles the year boundary and selected date');
+ await click('#nextWeek');await until(`loaded&&$('day').value==='2027-01-07'`);check(true,'next week changes the diary date');
+ await evaluate(`document.querySelector('[data-day="2027-01-04"]').click()`);await until(`loaded&&$('day').value==='2027-01-04'`);check(true,'tapping a weekday selects its records');
+ await evaluate(`$('dashboardDate').value=${JSON.stringify(originalDay)};$('dashboardDate').dispatchEvent(new Event('change'))`);await until(`loaded&&state.entries.length===1`);
+ check(await evaluate(`state.waterMl===500&&$('dailyWater').textContent==='500'&&state.macroGoal.protein===120`),'returning to the day restores cards and saved targets');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
 }finally{

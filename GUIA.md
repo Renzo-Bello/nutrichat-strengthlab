@@ -59,3 +59,9 @@ Usa **WhatsApp** en la cabecera o **Más → Escribir por WhatsApp** para abrir 
 ## Escribir en iPhone
 
 En **Registrar**, toca el campo e ingresa cantidad y alimento. Las sugerencias se muestran sobre el campo; al elegir una se conserva la cantidad. Al enviar la consulta, el teclado se cierra para que puedas revisar el resultado y confirmar con **Registrar**.
+
+## Resumen diario
+
+En **Hoy**, elige una fecha desde la semana o el selector del mes. La tarjeta grande muestra calorías registradas frente a tu meta; las tres tarjetas pequeñas muestran proteínas, carbohidratos y grasas. Si no configuraste una meta, se indica “sin meta”. Usa **Metas** para cambiar tus objetivos de la fecha seleccionada.
+
+Toca **Registrar agua** para abrir los controles de 250 y 500 ml y configurar la meta de hidratación. Las comidas aparecen debajo; **Más detalles de mi día** contiene micronutrientes y las explicaciones del almacenamiento. El registro de alimentos conserva el ajuste de teclado para iPhone.
