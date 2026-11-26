@@ -40,7 +40,7 @@ Al cambiar archivos publicados, incrementar la versión `CACHE` de `sw.js`. La n
 node tests/browser-smoke.mjs http://127.0.0.1:8765/ http://127.0.0.1:9222
 ```
 
-El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 91 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
+El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 109 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
 
 Validado con Chromium emulando tamaños móviles. La instalación y el teclado de Safari/iOS necesitan comprobación en un teléfono real; la emulación no los reproduce completamente.
 
@@ -51,3 +51,9 @@ El enlace de WhatsApp de la cabecera y de Más abre `https://wa.me/56957528873`;
 ## Explicaciones y metas
 
 Las tarjetas de calorías, proteínas, carbohidratos y grasas son botones accesibles que abren una explicación breve y permiten editar la meta correspondiente. El acceso Configurar/Editar metas de calorías y macros abre el formulario completo. Las calorías se guardan independientemente de los macros; la equivalencia 4/4/9 se muestra solo como referencia. Las metas son por fecha y persisten en IndexedDB.
+
+## Recomendaciones por horario
+
+`guidance.js` añade ideas educativas con las fotos locales en Hoy (horario America/Santiago), desayuno antes de las 12, almuerzo de 12 a 16, colación de 16 a 19 y cena desde las 19. Un horario de entrenamiento guardado tiene prioridad desde 90 minutos antes hasta dos horas después de terminar. Se actualiza cada minuto y al volver a la app; otras fechas muestran planificación sin fingir recomendaciones actuales.
+
+Registro permite guardar entrenamiento o descanso, hora opcional, duración y meta de kcal opcional por fecha. No se prescribe una reducción automática. Se mantiene el objetivo de macros; los planes se exportan e importan con el respaldo existente. Recetas incluye un esquema accesible de glucosa con fuentes educativas y explica los límites del IG.

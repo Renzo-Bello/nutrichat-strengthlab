@@ -71,3 +71,7 @@ Toca **Registrar agua** para abrir los controles de 250 y 500 ml y configurar la
 Toca **Calorías**, **Proteínas**, **Carbos** o **Grasas** para leer qué significa en dos frases. Desde esa explicación, toca **Configurar mi meta** o **Editar mi meta**. También puedes usar **Configurar metas de calorías y macros** en el resumen.
 
 Ingresa tus calorías y, opcionalmente, los tres macros en gramos. Puedes seguir solo calorías dejando los macros vacíos. La app conserva las calorías que escribas aunque la equivalencia aproximada de los macros sea distinta. Al guardar, las tarjetas muestran lo registrado frente a tus objetivos de la fecha seleccionada.
+
+### Ideas según tu día
+
+En Hoy verás alimentos con fotos según la hora de Chile. En Registrar, toca «Personaliza tu día» para elegir entrenamiento o descanso. Puedes indicar hora y duración del entrenamiento para ver ideas antes y después, además de una meta de calorías para esa fecha. El descanso no descuenta calorías automáticamente: elige la meta de tu plan. En Recetas, abre «Carbohidratos y energía» para ver una explicación e imagen referencial del índice glicémico.
