@@ -4,6 +4,7 @@
 const $=id=>document.getElementById(id);
 const glyph=name=>'<svg class="nc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#nc-'+name+'"></use></svg>';
 const summary=document.querySelector('.summary');
+const intro=document.createElement('div');intro.className='daily-intro';intro.innerHTML='<span class="section-kicker">Tu diario de nutrición</span><h1>Tu día, en balance.</h1><p>Cada registro cuenta. Avanza a tu ritmo.</p>';document.querySelector('#diary').prepend(intro);
 const editGoal=$('editgoal');editGoal.textContent='Metas';editGoal.removeAttribute('style');editGoal.className='dashboard-goals';editGoal.setAttribute('aria-label','Configurar metas de calorías y macros');
 const diary=$('diary'),journal=document.querySelector('.journal');
 // Keep the existing live water controls and handlers inside a compact sheet.
@@ -45,7 +46,7 @@ summary.addEventListener('click',e=>{
 });
 
 const calendar=document.createElement('section');calendar.className='week-calendar';calendar.setAttribute('aria-label','Fecha del diario');calendar.innerHTML='<div class="week-toolbar"><label class="month-picker"><span id="dailyMonth"></span>'+glyph('calendar')+'<input type="date" id="dashboardDate" aria-label="Elegir fecha del diario"></label><div class="week-tools"><button type="button" id="dashboardToday">Hoy</button></div></div><div class="week-navigation"><button type="button" id="previousWeek" aria-label="Semana anterior">‹</button><div id="weekDays" class="week-days"></div><button type="button" id="nextWeek" aria-label="Semana siguiente">›</button></div>';
-calendar.querySelector('.week-tools').append(editGoal);diary.prepend(calendar);
+calendar.querySelector('.week-tools').append(editGoal);diary.prepend(calendar);calendar.before(intro);
 function pickDay(value){if(busy||!value)return;$('day').value=value;$('day').onchange();}
 $('dashboardDate').onchange=e=>{if(busy){e.target.value=$('day').value;return;}pickDay(e.target.value);};
 $('dashboardToday').onclick=()=>{if(!busy)$('today').click();};$('previousWeek').onclick=()=>moveDay(-7);$('nextWeek').onclick=()=>moveDay(7);
