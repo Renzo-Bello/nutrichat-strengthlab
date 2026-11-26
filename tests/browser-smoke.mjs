@@ -124,6 +124,21 @@ try{
  await click('#configureDailyGoals');await evaluate(`$('goalprotein').value='140';$('goalprotein').dispatchEvent(new Event('input'));$('goalform').requestSubmit()`);await until(`!busy`);
  check(await evaluate(`$('goaldialog').open&&$('goalerror').textContent.includes('Completa')&&state.goal===2100&&state.macroGoal===null`),'incomplete macro targets show an error without changing saved goals');
  await click('[data-close="goaldialog"]');
+ // Local clock boundaries and training/rest context.
+ for(const [hour,expected] of [['08:00','breakfast'],['11:59','breakfast'],['12:00','lunch'],['15:59','lunch'],['16:00','snack'],['19:00','dinner']])check(await evaluate(`nutriRecommendation(new Date('2026-11-25T${hour}:00-03:00'),'2026-11-25',null)==='${expected}'`),`recommendation at ${hour}: ${expected}`);
+ for(const [hour,expected] of [['16:29','snack'],['16:30','pre'],['18:00','during'],['19:00','post'],['21:00','dinner']])check(await evaluate(`nutriRecommendation(new Date('2026-11-25T${hour}:00-03:00'),'2026-11-25',{type:'training',time:'18:00',duration:60})==='${expected}'`),`training context at ${hour}: ${expected}`);
+ check(await evaluate(`nutriRecommendation(new Date('2026-11-25T17:00:00-03:00'),'2026-11-25',{type:'rest',time:'18:00',duration:60})==='snack'&&nutriRecommendation(new Date('2026-11-25T17:00:00-03:00'),'2026-11-24',null)===null`),'rest and historical dates do not show training suggestions');
+ await click('#regnav');await click('#registerDayPlan');
+ await evaluate(`$('planType').value='training';$('planType').dispatchEvent(new Event('change'));$('planTime').value='18:00';$('planDuration').value='75';$('planCalories').value='2400';$('dayPlanForm').requestSubmit()`);await until(`!busy&&!$('dayPlanDialog').open`);
+ check(await evaluate(`state.dayPlan.type==='training'&&state.dayPlan.time==='18:00'&&state.dayPlan.duration===75&&state.goal===2400`),'registration saves training schedule and chosen calorie target');
+ await cdp('Page.reload');await until(`typeof loaded!=='undefined'&&loaded&&!!window.nutriRecommendation`);
+ check(await evaluate(`state.dayPlan.type==='training'&&state.dayPlan.duration===75&&state.goal===2400`),'day plan survives reload');
+ await click('#registerDayPlan');await evaluate(`$('planType').value='rest';$('planType').dispatchEvent(new Event('change'));$('planCalories').value='';$('dayPlanForm').requestSubmit()`);await until(`!busy&&!$('dayPlanDialog').open`);
+ check(await evaluate(`state.dayPlan.type==='rest'&&state.dayPlan.time===''&&state.goal===2400`),'rest clears schedule and never reduces calories automatically');
+ check(await evaluate(`(async()=>{const backup=await api('export');await api('dayPlan',{plan:{type:'training',time:'10:00',duration:60},kcal:null});await api('import',{data:backup});await load();return state.dayPlan.type==='rest';})()`),'backup restores activity plan');
+ await evaluate(`moveDay(1)`);await until(`!busy&&loaded&&state.dayPlan===null`);
+ check(await evaluate(`state.dayPlan===null`),'activity plan is isolated by date');
+ check(await evaluate(`document.querySelector('.carb-education svg title').textContent.includes('ilustrativas')`),'recipes include accessible educational glucose illustration');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
 }finally{
