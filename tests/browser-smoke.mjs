@@ -156,6 +156,28 @@ try{
  check(await evaluate(`document.body.dataset.view==='label'&&!$('loadLesson').classList.contains('hidden')`),'daily advice links to glycemic load lesson');
  await evaluate(`openNutritionLesson('labels')`);
  check(await evaluate(`!$('labelLesson').classList.contains('hidden')&&!document.querySelector('.manual-label').classList.contains('hidden')`),'label learning and food form remain accessible');
+ await evaluate(`navigateApp('menu');$('recipeSearch').value='';$('recipeSearch').dispatchEvent(new Event('input'));document.querySelector('[data-recipe-filter="Todas"]').click()`);
+ await click('[data-recipe="tostada-palta"]');
+ check(await evaluate(`$('recipeBread').options.length===8&&$('recipeBread').value==='extra-breadwhole'&&$('recipeBreadGrams').value==='60'`),'bread recipe starts with original bread and weight and offers seven requested breads plus pita');
+ const initialIngredients=await evaluate(`recipeBook.find(r=>r.id==='tostada-palta').items.map(x=>[...x])`);
+ for(const id of ['extra-breadwhole','base-2','bread-ciabatta','bread-ciabatta-whole','base-1','base-0','bread-doblada']){
+  await evaluate(`$('recipeBread').value='${id}';$('recipeBread').dispatchEvent(new Event('change'))`);
+  check(await evaluate(`(()=>{const f=base.find(f=>f.id==='${id}'),a=base.find(f=>f.id==='base-28'),e=base.find(f=>f.id==='base-17');const expected=round1(f.protein*.6)+round1(a.protein*.5)+round1(e.protein*.5);return $('recipeIngredients').firstElementChild.textContent.includes(f.name)&&$('recipeNutrition').textContent.includes('Proteínas '+fmt(expected)+' g')&&$('breadReference').textContent.includes(f.source);})()`),`bread ${id} recalculates protein and identifies reference`);
+ }
+ await evaluate(`$('recipeBreadGrams').value='85';$('recipeBreadGrams').dispatchEvent(new Event('input'))`);const perServing=await evaluate(`$('recipeNutrition').textContent`);
+ await evaluate(`$('recipeServings').value='2';$('recipeServings').dispatchEvent(new Event('change'))`);
+ check(await evaluate(`$('recipeIngredients').firstElementChild.textContent.includes('170 g')&&$('recipeIngredients').children[1].textContent.includes('100 g')&&$('recipeNutrition').textContent===${JSON.stringify(perServing)}`),'batch scales bread and filling but keeps per-serving macros');
+ await evaluate(`$('recipeBreadGrams').value='';$('recipeBreadGrams').dispatchEvent(new Event('input'))`);
+ check(await evaluate(`$('breadError').textContent.length>0&&$('recipeIngredients').children.length===0&&$('recipeToChat').disabled&&!$('recipeNutrition').textContent.includes('kcal')`),'empty bread amount clears stale calculations and disables handoff');
+ await evaluate(`$('recipeBreadGrams').value='85';$('recipeBreadGrams').dispatchEvent(new Event('input'))`);
+ check(await evaluate(`!$('recipeToChat').disabled&&$('breadError').textContent===''`),'valid weight restores calculations');
+ await click('#closeRecipe');await click('[data-recipe="tostada-palta"]');
+ check(await evaluate(`$('recipeBread').value==='bread-doblada'&&$('recipeBreadGrams').value==='85'`),'bread choice remains for recipe during session');
+ check(JSON.stringify(await evaluate(`recipeBook.find(r=>r.id==='tostada-palta').items`))===JSON.stringify(initialIngredients),'customization does not mutate original recipe');
+ for(const width of [320,390,768]){await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:true});check(await evaluate(`$('recipeDialog').scrollWidth<=$('recipeDialog').clientWidth+1`),`bread selector fits ${width}px`);}
+ await click('#closeRecipe');await click('[data-recipe="avena-fruta"]');check(await evaluate(`!$('recipeBread')`),'non-bread recipes do not show selector');await click('#closeRecipe');
+ await click('[data-recipe="pita-atun"]');check(await evaluate(`$('recipeBread').value==='base-3'`),'pita recipe preserves its original bread');await click('#closeRecipe');
+ check(await evaluate(`['bread-ciabatta','bread-ciabatta-whole','bread-doblada'].every(id=>state.foods.some(f=>f.id===id))`),'new breads are available in food registration');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
 }finally{
