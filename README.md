@@ -40,7 +40,7 @@ Al cambiar archivos publicados, incrementar la versión `CACHE` de `sw.js`. La n
 node tests/browser-smoke.mjs http://127.0.0.1:8765/ http://127.0.0.1:9222
 ```
 
-El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 109 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
+El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 129 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
 
 Validado con Chromium emulando tamaños móviles. La instalación y el teclado de Safari/iOS necesitan comprobación en un teléfono real; la emulación no los reproduce completamente.
 
@@ -57,3 +57,7 @@ Las tarjetas de calorías, proteínas, carbohidratos y grasas son botones accesi
 `guidance.js` añade ideas educativas con las fotos locales en Hoy (horario America/Santiago), desayuno antes de las 12, almuerzo de 12 a 16, colación de 16 a 19 y cena desde las 19. Un horario de entrenamiento guardado tiene prioridad desde 90 minutos antes hasta dos horas después de terminar. Se actualiza cada minuto y al volver a la app; otras fechas muestran planificación sin fingir recomendaciones actuales.
 
 Registro permite guardar entrenamiento o descanso, hora opcional, duración y meta de kcal opcional por fecha. No se prescribe una reducción automática. Se mantiene el objetivo de macros; los planes se exportan e importan con el respaldo existente. Recetas incluye un esquema accesible de glucosa con fuentes educativas y explica los límites del IG.
+
+### Educación sobre carbohidratos
+
+Aprender incluye lectura de etiquetas, carga glicémica y pre/postentreno. `learning.js` permite comparar una y dos porciones: pan y lentejas usan supuestos didácticos explícitos; el ejemplo de leche cita Illinois Extension. No calcula CG de registros reales. Las recomendaciones de desayuno explican fibra, saciedad y porción, con una foto de preparación y horarios orientativos para entrenar por la mañana. Fotos locales disponibles sin conexión.
