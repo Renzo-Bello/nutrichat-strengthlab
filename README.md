@@ -40,7 +40,7 @@ Al cambiar archivos publicados, incrementar la versión `CACHE` de `sw.js`. La n
 node tests/browser-smoke.mjs http://127.0.0.1:8765/ http://127.0.0.1:9222
 ```
 
-El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 129 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
+El test borra exclusivamente los datos del origen local de prueba en ese perfil. No ejecutarlo sobre un navegador o un origen local con registros personales. Cubre 148 comprobaciones: seis anchos de pantalla (320–1280 px), visibilidad del compositor, teclado con viewport reducido y desplazado, estabilidad de sugerencias, enlaces WhatsApp, recetas, favoritas, porciones, etiqueta educativa, alta/edición/eliminación/deshacer, fechas, agua, metas, persistencia y funcionamiento sin conexión.
 
 Validado con Chromium emulando tamaños móviles. La instalación y el teclado de Safari/iOS necesitan comprobación en un teléfono real; la emulación no los reproduce completamente.
 
@@ -61,3 +61,7 @@ Registro permite guardar entrenamiento o descanso, hora opcional, duración y me
 ### Educación sobre carbohidratos
 
 Aprender incluye lectura de etiquetas, carga glicémica y pre/postentreno. `learning.js` permite comparar una y dos porciones: pan y lentejas usan supuestos didácticos explícitos; el ejemplo de leche cita Illinois Extension. No calcula CG de registros reales. Las recomendaciones de desayuno explican fibra, saciedad y porción, con una foto de preparación y horarios orientativos para entrenar por la mañana. Fotos locales disponibles sin conexión.
+
+### Pan a elección en recetas
+
+Las recetas con pan permiten elegir molde integral/blanco, ciabatta/integral, hallulla, marraqueta, doblada o pita y ajustar gramos por porción. Los ingredientes y macros se recalculan sin modificar la receta original; las elecciones se conservan durante la sesión. Las tarjetas del catálogo reflejan la variante elegida. Ciabattas usan referencias Jumbo y doblada Alipan/Lider (columna 100 g), con la misma regla 4/4/9 del registro. Se valida cantidad de 1 a 1000 g; cambiar porciones escala todos los ingredientes y conserva el resumen por porción.
