@@ -281,5 +281,5 @@ const photoDialog=$('photodialog');
 document.addEventListener('click',e=>{const trigger=e.target.closest('[data-photo-sheet]');if(!trigger)return;const tile=Number(trigger.dataset.photoTile||0);const preview=$('photoPreview');preview.style.backgroundImage='url('+JSON.stringify(trigger.dataset.photoSheet)+')';preview.style.backgroundPosition=(tile%4)*100/3+'% '+Math.floor(tile/4)*100/3+'%';$('photoCaption').textContent=trigger.dataset.photoLabel||'Foto del alimento';preview.setAttribute('aria-label','Foto ampliada: '+$('photoCaption').textContent);if(!photoDialog.open)photoDialog.showModal();});
 $('closePhoto').onclick=()=>photoDialog.close();photoDialog.addEventListener('click',e=>{if(e.target===photoDialog)photoDialog.close();});
 welcome();load();
-</script><script src="recipes.js"></script><script src="mobile.js"></script><script src="dashboard.js"></script><script src="guidance.js"></script></body></html>
+</script><script src="recipes.js"></script><script src="mobile.js"></script><script src="dashboard.js"></script><script src="guidance.js"></script><script src="learning.js"></script></body></html>
 

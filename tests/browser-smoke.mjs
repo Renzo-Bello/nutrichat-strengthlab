@@ -139,6 +139,23 @@ try{
  await evaluate(`moveDay(1)`);await until(`!busy&&loaded&&state.dayPlan===null`);
  check(await evaluate(`state.dayPlan===null`),'activity plan is isolated by date');
  check(await evaluate(`document.querySelector('.carb-education svg title').textContent.includes('ilustrativas')`),'recipes include accessible educational glucose illustration');
+ await evaluate(`navigateApp('label');openNutritionLesson('load')`);
+ check(await evaluate(`!$('loadLesson').classList.contains('hidden')&&$('labelLesson').classList.contains('hidden')&&$('loadResult').textContent.includes('17,5')`),'load topic shows one-portion example');
+ await click('[data-load-portion="2"]');
+ check(await evaluate(`$('loadResult').textContent.includes('35')&&$('loadResult').textContent.includes('IG sigue en 70')`),'doubling portion doubles load without changing GI');
+ await evaluate(`$('loadFood').value='lentils';$('loadFood').dispatchEvent(new Event('change'))`);
+ check(await evaluate(`$('loadResult').textContent.includes('4,5')&&document.querySelector('[data-load-portion="1"]').getAttribute('aria-pressed')==='true'`),'food selection resets portion and calculates lentil example');
+ await evaluate(`$('loadFood').value='milk';$('loadFood').dispatchEvent(new Event('change'))`);
+ check(await evaluate(`$('loadResult').textContent.includes('5,5')&&$('loadAssumption').textContent.includes('237 ml')`),'source-backed milk example displays rounded load');
+ for(const width of [320,390,768,1280]){await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<850});for(const topic of ['load','sport','labels']){await evaluate(`openNutritionLesson('${topic}')`);check(await evaluate(`document.documentElement.scrollWidth<=innerWidth`),`${topic} lesson fits ${width}px`);}}
+ await evaluate(`openNutritionLesson('sport')`);
+ check(await evaluate(`document.querySelectorAll('.fuel-timeline article').length===3&&document.querySelectorAll('.fuel-foods .foodphoto').length===2`),'three training moments and food photos render');
+ await evaluate(`Promise.all([...document.querySelectorAll('.fuel-timeline img')].map(i=>{i.loading='eager';return i.decode();}))`);
+ check(await evaluate(`[...document.querySelectorAll('.fuel-timeline img')].every(i=>i.naturalWidth>0)`),'training meal images load');
+ await evaluate(`navigateApp('diary');$('dashboardToday').click()`);await wait(200);await click('#adviceLearn');
+ check(await evaluate(`document.body.dataset.view==='label'&&!$('loadLesson').classList.contains('hidden')`),'daily advice links to glycemic load lesson');
+ await evaluate(`openNutritionLesson('labels')`);
+ check(await evaluate(`!$('labelLesson').classList.contains('hidden')&&!document.querySelector('.manual-label').classList.contains('hidden')`),'label learning and food form remain accessible');
  check(errors.length===0,'no uncaught browser exceptions');
  console.log(`${passed} checks passed`);
 }finally{
